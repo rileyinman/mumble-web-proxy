@@ -1,6 +1,6 @@
 [package]
 name = "mumble-web-proxy"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Jonas Herzig <me@johni0702.de>"]
 edition = "2018"
 
@@ -19,7 +19,7 @@ mumble-protocol = { version = "0.4", features = ["webrtc-extensions"] }
 tokio-tungstenite = "0.13"
 http = "0.2"
 tungstenite = "0.12"
-rtp = { git = "https://github.com/johni0702/rtp", rev = "6c0223d", features = ["rfc5764-openssl"] }
+rtp = { git = "https://github.com/rileyinman/rtp", tag = "0.1.1", features = ["rfc5764-openssl"] }
 libnice = "0.3"
 webrtc-sdp = "0.3"
 openssl = "0.10"
