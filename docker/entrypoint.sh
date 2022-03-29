@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cmd=("/mumble-web-proxy" "--listen-ws=$MWP_LISTEN_WS" "--server=$MWP_SERVER")
+cmd=("mumble-web-proxy" "--listen-ws=$MWP_LISTEN_WS" "--server=$MWP_SERVER")
 
 if [ "$MWP_ACCEPT_INVALID_CERTIFICATE" = true ]; then
   cmd+=("--accept-invalid-certificate")

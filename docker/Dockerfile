@@ -1,28 +1,27 @@
-FROM rust:1.48-alpine AS build
-
-ARG REV=master
+FROM rust:alpine AS build
 
 RUN apk add --no-cache \
     clang-libs \
     curl \
     libc-dev \
     libnice-dev \
-    openssl-dev \
-    ;
+    openssl-dev
+
 WORKDIR /src
-RUN curl https://codeload.github.com/Johni0702/mumble-web-proxy/tar.gz/$REV \
-    | tar -xzf - --strip-components 1
-RUN echo -e '\n[dependencies."async-trait"]\ndefault-features = false' >> Cargo.toml
-RUN RUSTFLAGS="-C target-feature=-crt-static" cargo install --path .
+COPY .. /src
+# RUN echo -e '\n[dependencies."async-trait"]\ndefault-features = false' >> Cargo.toml
+# RUN RUSTFLAGS="-C target-feature=-crt-static" cargo install --path .
+RUN cargo install --path .
 
 FROM alpine
 
-RUN apk add --no-cache \
-    bash \
-    libgcc \
-    libnice \
-    ;
-COPY --from=build /usr/local/cargo/bin/mumble-web-proxy /mumble-web-proxy
+RUN apk add bash
+# RUN apk add --no-cache \
+#     bash \
+#     libgcc \
+#     libnice
+
+COPY --from=build /usr/local/cargo/bin/mumble-web-proxy /bin/mumble-web-proxy
 COPY entrypoint.sh /entrypoint.sh
 
 ENV MWP_LISTEN_WS=64737
@@ -33,6 +32,5 @@ ENV MWP_ICE_PORT_MAX=
 ENV MWP_ICE_IPV4=
 ENV MWP_ICE_IPV6=
 
-CMD ["/entrypoint.sh"]
-USER 1000
 EXPOSE 64737
+CMD ["/entrypoint.sh"]
