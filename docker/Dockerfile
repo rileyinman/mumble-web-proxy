@@ -7,19 +7,19 @@ RUN apk add --no-cache \
     libnice-dev \
     openssl-dev
 
+ARG REV=docker
+
 WORKDIR /src
-COPY .. /src
-# RUN echo -e '\n[dependencies."async-trait"]\ndefault-features = false' >> Cargo.toml
-# RUN RUSTFLAGS="-C target-feature=-crt-static" cargo install --path .
-RUN cargo install --path .
+RUN curl https://codeload.github.com/rileyinman/mumble-web-proxy/tar.gz/$REV \
+    | tar -xzf - --strip-components 1
+RUN RUSTFLAGS="-C target-feature=-crt-static" cargo install --path .
 
 FROM alpine
 
-RUN apk add bash
-# RUN apk add --no-cache \
-#     bash \
-#     libgcc \
-#     libnice
+RUN apk add --no-cache \
+    bash \
+    libgcc \
+    libnice
 
 COPY --from=build /usr/local/cargo/bin/mumble-web-proxy /bin/mumble-web-proxy
 COPY entrypoint.sh /entrypoint.sh
